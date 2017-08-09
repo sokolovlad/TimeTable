@@ -92,24 +92,24 @@ public class login {
 					
 					//4. process the resultset object
 					while(myRs.next()){
-				
-				if((txtStudname.getText().equals(myRs.getString("Student_name"))) && 
-						(txtStudID.getText().equals(myRs.getString("Student_ID")))){
+					if((txtStudname.getText().equals(myRs.getString("Student_name"))) && 
+						(txtStudID.getText().equals(myRs.getString("Student_ID")))) {
 					//JOptionPane.showMessageDialog(null, "Correct credentials");
 					frmLogin.dispose();
 					course obj = new course();
 					obj.setVisible(true);
+					} else {
+						JOptionPane.showMessageDialog(null, "Error");
+						txtStudname.setText("");
+						txtStudID.setText("");
 				}
-				else {
-					JOptionPane.showMessageDialog(null, "Error");
-					txtStudname.setText("");
-					txtStudID.setText("");
-				}
+			{
+					myStmt.close();
+					myStmt.close();
+						}
 					}
-					
-					myStmt.close();
-					myStmt.close();
-				}catch(Exception e){
+				}
+				catch(Exception e){
 					e.printStackTrace();
 				}
 				
@@ -123,4 +123,6 @@ public class login {
 		btnLogIn.setBounds(251, 169, 89, 23);
 		frmLogin.getContentPane().add(btnLogIn);
 	}
-}
+		}
+		
+
