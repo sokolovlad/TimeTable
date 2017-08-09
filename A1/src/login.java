@@ -3,17 +3,23 @@ import java.awt.Frame;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import com.jgoodies.forms.factories.DefaultComponentFactory;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.awt.event.ActionEvent;
 
 public class login {
 
 	private JFrame frmLogin;
 	private JTextField txtStudname;
-	private JTextField textField_1;
+	private JTextField txtStudID;
 
 	/**
 	 * Launch the application.
@@ -61,19 +67,56 @@ public class login {
 		lblStudentId.setBounds(10, 116, 92, 14);
 		frmLogin.getContentPane().add(lblStudentId);
 		
-		textField_1 = new JTextField();
-		textField_1.setBounds(112, 113, 204, 20);
-		frmLogin.getContentPane().add(textField_1);
-		textField_1.setColumns(10);
+		txtStudID = new JTextField();
+		txtStudID.setBounds(112, 113, 204, 20);
+		frmLogin.getContentPane().add(txtStudID);
+		txtStudID.setColumns(10);
 		
 		JButton btnLogIn = new JButton("Log In");
 		btnLogIn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				//add code for the DB
-				frmLogin.setVisible(false);
-				course cor=new course();
-				cor.setVisible(true);			
+				String dbUrl = "jdbc:mysql://localhost:3306/timetable";
+				String user = "root";
+				String password = "";
 				
+				try {
+					//1. established  the connection
+					Connection myConn = DriverManager.getConnection(dbUrl, user, password);
+					
+					//2. create a statement
+					Statement myStmt = myConn.createStatement();
+					
+					//3. execute the query
+					ResultSet myRs = myStmt.executeQuery("select * from Student");
+					
+					//4. process the resultset object
+					while(myRs.next()){
+				
+				if((txtStudname.getText().equals(myRs.getString("Student_name"))) && 
+						(txtStudID.getText().equals(myRs.getString("Student_ID")))){
+					//JOptionPane.showMessageDialog(null, "Correct credentials");
+					frmLogin.dispose();
+					course obj = new course();
+					obj.setVisible(true);
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "Error");
+					txtStudname.setText("");
+					txtStudID.setText("");
+				}
+					}
+					
+					myStmt.close();
+					myStmt.close();
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+				
+//				frmLogin.setVisible(false);
+//				course cor=new course();
+//				cor.setVisible(true);			
+//				
 				
 			}
 		});
